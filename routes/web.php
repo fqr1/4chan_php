@@ -56,3 +56,7 @@ setTimeout(location.reload(),1000);
 </script>
   ";
 });
+
+Route::get('/search',function(Request $request){
+  return view('search');
+});
