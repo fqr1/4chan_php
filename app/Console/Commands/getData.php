@@ -42,7 +42,10 @@ class getData extends Command
   {
 $board = $this->argument('board');
 
-if(!$board){Echo "No board specified, will consult all";$board ='';}
+if(!$board){
+  \Log::warning("No board specified, will consult all");
+  $board ='';
+}
 
     $base_dir = getenv('BASE_URL');
     //$base_dir = '/home/ubuntu/4/';
@@ -52,7 +55,8 @@ if(!$board){Echo "No board specified, will consult all";$board ='';}
     $limit=100;
     while(true){
     while(!$finished){
-      echo "Getting data...\n";
+      \Log::debug("Getting data... $board");
+      //echo "Getting data...\n";
       $threads = \App\Thread::whereNotNull('url_data')
       //->where('board','aco')
       ->where('downloaded','0')
@@ -78,7 +82,8 @@ if(!$board){Echo "No board specified, will consult all";$board ='';}
         }
 
         if (!is_dir($base_dir.$board.'/'.$title)) {
-          echo 'creating dir '.$title." in board ".$board."\n";
+          \Log::debug("creating dir $title in board $board");
+          //echo 'creating dir '.$title." in board ".$board."\n";
           mkdir($base_dir.$board.'/'.$title);
         }
 
@@ -89,7 +94,8 @@ if(!$board){Echo "No board specified, will consult all";$board ='';}
 
         try {
               if(!file_exists($path_to_save)) {
-            echo "[".\Carbon\Carbon::now("America/Mexico_city")."] Saving... ".$path_to_save."\n";
+                \Log::debug("Saving... $path_to_save");
+            //echo "[".\Carbon\Carbon::now("America/Mexico_city")."] Saving... ".$path_to_save."\n";
             file_put_contents($path_to_save, fopen($url, 'r'));
             sleep(1);
             //$thread->downloaded=true;
@@ -99,15 +105,16 @@ if(!$board){Echo "No board specified, will consult all";$board ='';}
           $thread->downloaded=true;
           $thread->save();
         }catch(\Exception $e){
-          echo "Exception\n";
-          \Log::warning('Data exception',compact('url','path_to_save'));
-          \Log::error($e);
+          //echo "Exception\n";
+          \Log::warning('Data exception',compact('url','path_to_save','e'));
+          //\Log::error($e);
             $thread->downloaded=-1;
             $thread->save();
         }
       }
     }
-    echo "FINISHED! will sleep for 15 min \n";
+    \Log::debug("FINISHED $board! will sleep for 5 min ");
+    //echo "FINISHED! will sleep for 15 min \n";
   sleep(5*60);
   $finished = false;
   }

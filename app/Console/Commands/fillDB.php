@@ -38,7 +38,6 @@ class fillDB extends Command
   */
   public function handle()
   {
-    echo "aaaaaaa\n";
 // aco b gif hc hr r s t
     $boards = [
       't' => 'threads',
@@ -55,7 +54,8 @@ class fillDB extends Command
     ];
     while(true){
       foreach ($boards as $board => $value) {
-        echo "Consulting thread $board\n";
+        \Log::debug("Consulting board $board");
+        //echo "Consulting thread $board\n";
         $this->getThreadsFromBoard($board);
         sleep(2);
       }
@@ -75,7 +75,7 @@ class fillDB extends Command
     dispatch($job_hc);
     */
     #Queue::push('FillThreads', array('message' => 'Time: '.time()));// this will push job in queue
-    echo "bbbbbbbb\n";
+    //echo "bbbbbbbb\n";
   }
 
   public function getThreadsFromBoard($board){
@@ -85,7 +85,8 @@ class fillDB extends Command
       ->expectsJson()
       ->send();
     }catch(\Exception $e){
-      echo "There was a problem consulting 4chan tread\n";
+      \Log::debug("There was a problem consulting 4chan board $board");
+      //echo "There was a problem consulting 4chan tread\n";
       sleep(15*60);
       return;
     }
@@ -95,7 +96,8 @@ class fillDB extends Command
     foreach($response as $page){
       foreach ($page->threads as $key => $thread_main) {
         $thread_id = $thread_main->no;
-        echo "Thread no. ".$thread_id." $board\n";
+        \Log::debug("Thread no. $thread_id -  $board");
+        //echo "Thread no. ".$thread_id." $board\n";
         $this->getResponsesFromThread($thread_id,$board);
 
         sleep(2);
@@ -114,11 +116,13 @@ class fillDB extends Command
       ->expectsJson()
       ->send();
     }catch(\Exception $e){
-      echo "There was a problem consulting 4chan tread\n";
+      \Log::debug("There was a problem consulting 4chan tread $thread_id",["e"=>$e]);
+      //echo "There was a problem consulting 4chan tread\n";
       sleep(15*60);
       return;
     }
-    echo "Decoding... \n";
+    \Log::debug("Decoding... $board - $thread_id");
+    //echo "Decoding... \n";
     $response_tread = json_decode($response_tread_raw);
     $posts = [];
     if(isset($response_tread->posts)){
