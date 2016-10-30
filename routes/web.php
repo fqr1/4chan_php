@@ -60,3 +60,6 @@ setTimeout(location.reload(),1000);
 Route::get('/search',function(Request $request){
   return view('search');
 });
+
+Route::get('/search/thread/{thread_id}/','searchController@getSearchThread');
+Route::get('/search/{val}/{boards}','searchController@getSearch');
