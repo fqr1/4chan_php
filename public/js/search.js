@@ -13,7 +13,7 @@ $(document).ready(function(){
 
 
   $('#query_button').click(function(){
-    
+
     $result = $('#result').empty();
     $('#more_info').empty();
 
@@ -51,6 +51,27 @@ $(document).ready(function(){
     $val ? $opt.show() : $opt.hide();
     //$('#options').show($val);
 
+  });
+
+
+  $('#handle_button').click(function(){
+    var source   = $("#data-template").html();
+    var template = Handlebars.compile(source);
+    var context = {
+      data:{
+      thread: "14858978",
+      board: "r",
+      downloaded: "1",
+      url_4chan: "http://i.4cdn.org/r/1475277538971.jpg",
+      com: "On a big boobs roll tonight...",
+      url: "4/r/14858978/1475277538971.jpg",
+      semantic_url: 'asd'
+    }
+
+    };
+    var html    = template(context);
+    console.log(html);
+    $('#handle').append(html);
   });
 
 });
@@ -96,7 +117,23 @@ function getInputs(){
 
 
 function insertField(data){
+  Handlebars.registerHelper('full_url', function(data) {
+    return '4/'+data.board+'/'+data.thread_id+'/'+data.tim+data.ext;
+  });
+
+  Handlebars.registerHelper('ifGreater', function(data, value) {
+    return data > value ;
+  });
+
   $result = $('#result');
+
+  var source   = $("#data-template").html();
+  var template = Handlebars.compile(source);
+  var context = {data:data};
+  var html    = template(context);
+
+$result.append(html);
+  return;
 
 $main = $('<div>',{style:'margin-top: 50px;border-style: solid;border-color: gray;'});
 $result.append($main);

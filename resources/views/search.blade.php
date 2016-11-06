@@ -1,11 +1,15 @@
 <html>
 <head>
-
+<title>Search</title>
 <script src="js/jquery.js"></script>
 <script src="js/search.js"></script>
+<script src="js/handlebars.js"></script>
 
 </head>
 <body>
+
+@include('partial_search')
+
 <input type='text' id='query_input'> <input id='query_button' type="button" value="search query">
 <br>Or...<br>
 <input type='text' id='thread_input'> <input id='thread_button' type="button" value="search thread">
@@ -24,6 +28,15 @@
 </div>
 <div id='more_info'></div>
 <div id='result'></div>
+
+
+
+<br><br><input type="button" id='handle_button' value="add"><br>
+<div id='handle'>
+
+
+
+</div>
 </body>
 
 
